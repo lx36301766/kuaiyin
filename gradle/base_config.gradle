@@ -1,0 +1,93 @@
+
+apply from: "$gradle_root/kotlin_android.gradle"
+
+android {
+
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
+
+    lintOptions {
+        abortOnError false
+    }
+
+    dataBinding {
+        enabled true
+    }
+
+    defaultConfig {
+
+        multiDexEnabled true
+        multiDexKeepProguard file("keep_in_main_dex.pro")
+
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+
+        ndk {
+            abiFilters "armeabi"
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['assets']
+        }
+    }
+
+    signingConfigs {
+
+        def KEY_STORE_PATH = rootDir.absolutePath + "/keystore/airfilter.KeyStore"
+
+        debug {
+            storeFile file(KEY_STORE_PATH)
+            storePassword KEY_STORE_PASSWORD
+            keyAlias KEY_STORE_ALIAS
+            keyPassword KEY_STORE_PASSWORD
+            v2SigningEnabled false
+        }
+
+        release {
+            storeFile file(KEY_STORE_PATH)
+            storePassword KEY_STORE_PASSWORD
+            keyAlias KEY_STORE_ALIAS
+            keyPassword KEY_STORE_PASSWORD
+            v2SigningEnabled false
+        }
+
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled false
+            zipAlignEnabled true
+            shrinkResources false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true
+            minifyEnabled false
+            zipAlignEnabled true
+            shrinkResources false
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testImplementation 'junit:junit:4.12'
+
+    api deps.support.app_compat
+    api deps.support.multidex
+    api deps.support.constraint_layout
+    api deps.support.annotations
+    api deps.support.recyclerview
+}

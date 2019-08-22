@@ -1,33 +1,45 @@
 apply plugin: 'com.android.application'
 
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
+apply from: "$gradle_root/base_config.gradle"
 
 android {
-    compileSdkVersion 28
+
     defaultConfig {
-        applicationId "com.yc.kuaiyin"
-        minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
+        multiDexKeepProguard file("keep_in_main_dex.pro")
+
+        applicationId app_config.applicationId
+        versionCode app_config.versionCode
+        versionName app_config.versionName
+
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
+
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    api deps.lifecycle.extensions
+    kapt deps.lifecycle.compiler
+
+    api deps.navigation.ui_ktx
+    api deps.navigation.runtime_ktx
+    api deps.navigation.fragment_ktx
+
+    api deps.room.runtime
+    kapt deps.room.compiler
+
+    api deps.retrofit.runtime
+    api deps.retrofit.rxjava2
+    api deps.retrofit.fastjson
+
+    api deps.glide.runtime
+    kapt deps.glide.compiler
+
+    api deps.rx.rxjava
+    api deps.rx.rxandroid
+    api deps.rx.rxbinding
+
+    api deps.and_permission
+
 }
