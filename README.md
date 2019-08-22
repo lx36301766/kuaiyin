@@ -21,51 +21,61 @@
 9.屏幕适配：全新项目可考虑直接采用今日头条屏幕适配方案（ https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA ）
 
 
-## 计划开发的框架配置集成 ( // 开头的表示未完成 )
+
+## UI
+
+底部导航：BottomNavigationView / BottomNavigationViewEx / TabLayout  +  Fragment  /  QMUITabSegment?
+
+首页列表：ViewPager + Fragment + RecyclerView ( BRAVH + SmartRefreshLayout )
+
+列表刷新（上拉/下拉）：BRAVH + SmartRefreshLayout  /  QMUIPullRefreshLayout
+
+底部弹框：QMUIBottomSheet
+
+个人中心：QMUIGroupListView
+
+通用 Toast：
+
+通用 Loading：QMUILoadingView
+
+通用 Dialog：QMUIDialog
+
+
+
+## BaseLibrary （SpManager，DbManager，YLog，NetManager，ImgLoader，PermissionsManager）
+
 
 Jetpack 基础框架集成 -> DataBinding + Lifecycle + LiveData + ViewModel + Navgation + Paging
 
-网络请求模块 -> RetrofitManager
+基础工具类 -> AndroidUtilCode
 
-图片请求封装 -> Glide
+基础UI库 -> QMUI
 
-路由跳转封装 -> JMRouter
+屏幕适配 -> 今日头条方案（AndroidUtilCode）
 
-注解绑定工具 -> ButterKnife / KotterKnife
-
-响应式框架集成 -> RxAndroid / Rxjava
-
-日志工具 -> JLog
-
-异常捕获和上报 -> Bugly + CrashManager
-
-Activity 栈管理 -> ActivityStackHelper
-
-SP封装 -> SharedPreferencesHelper
-
-// 通用 Toast，Loading，Dialog -> JMToast
-
-文件操作工具 -> StringUtils
-
-权限请求 -> PermissionUtils
-
-PUSH推送 -> 个推
-
-数据统计 -> 神策
-
-登录/分享 -> 微信/支付宝/微博
-
-支付 -> 微信/支付宝
+SP封装 -> MMKV
 
 数据库集成 -> Room
 
-// 后台定时任务工具 -> 使用 android-job 进行封装
+Log工具 -> YLog
 
-// 文件下载封装 -> FileDownload
+网络/图片/下载：Retrofit + Glide + okdownload   /  Okgo + Glide  /  Ion
 
-// 屏幕适配工具 -> 
+权限请求 -> AndroidUtilCode
 
-// 二维码封装 -> 
+路由框架 -> ARouter
+
+
+数据统计 -> 友盟
+
+崩溃统计 -> bugly
+
+Push -> 个推
+
+登录 -> 微信/QQ
+
+分享 -> 微信/QQ/微博
+
 
 
 ## gradle 基础配置：
@@ -73,22 +83,4 @@ PUSH推送 -> 个推
 所有必须依赖的基础配置放在gradle根目录中，所有新建 module，library 统一依赖 base_config.gradle，保证项目中所有 module 配置统一
 
 所有第三库，插件等依赖申明集中放置于 dependency.gradle 文件中
-
-
-
-基础工具类 -> AndroidUtilCode
-基础UI库 -> QMUI
-屏幕适配 -> 今日头条方案
-SP封装 -> MMKV
-Log工具 -> YLog ?
-网络请求 -> Retrofit/Okgo/icon ？
-图片加载 -> Glide/Ion ？
-文件下载 -> okdownload/PRDownloader/Okgo/icon ？
-权限请求 -> RxPermissions/AndPermission
-路由框架 -> ARouter
-
-数据统计 -> 友盟
-崩溃统计 -> bugly
-登录 -> 微信/QQ
-分享 -> 微信/QQ/微博
 

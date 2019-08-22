@@ -42,4 +42,5 @@ dependencies {
 
     api deps.and_permission
 
+    compile 'com.koushikdutta.ion:ion:2.2.1'
 }
