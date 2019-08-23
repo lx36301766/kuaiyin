@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         YLog.d("12")
         YLog.tag("aab").d("12")
 
-        Log.d("lx", "12")
+
 
     }
 

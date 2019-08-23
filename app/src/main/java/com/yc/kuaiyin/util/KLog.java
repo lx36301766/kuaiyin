@@ -350,7 +350,7 @@ public class KLog {
                 xml = headString + NULL_TIPS;
             }
             Util.printLine(tag, true);
-            String[] lines = xml.split(KLog.LINE_SEPARATOR);
+            String[] lines = xml.split(LINE_SEPARATOR);
             for (String line : lines) {
                 if (!Util.isEmpty(line)) {
                     Log.d(tag, "║ " + line);

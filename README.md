@@ -1,4 +1,26 @@
 
+# 预估时间
+
+首页UI界面开发：12h
+
+自定义播放进度条：10h
+
+首页弹框UI（分享/举报/设置铃声）：6h
+
+搜索页UI：6h
+
+搜索结果页UI: 6h
+
+已下载页面UI：6h
+
+通用弹出框 / Toast / 错误提示页面 / ：6h
+
+个人中心页面UI：12h
+
+工具类：
+
+
+
 ## UI基础控件
 
 底部导航：BottomNavigationView / BottomNavigationViewEx / TabLayout  +  Fragment  /  QMUITabSegment?

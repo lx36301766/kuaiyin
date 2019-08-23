@@ -9,8 +9,9 @@ import java.util.ArrayList
 import java.util.Collections
 import java.util.Collections.unmodifiableList
 import java.util.regex.Pattern
-import android.R.attr.tag
-
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 
 
 /** Logging for lazy people. */
@@ -140,6 +141,11 @@ class YLog private constructor() {
             prepareLog(priority, t, null)
         }
 
+        /** Log at `priority` an exception. */
+        open fun json(message: String?) {
+            prepareLog(DefaultTree.JSON, null, message)
+        }
+
         /** Return whether a message at `priority` should be logged. */
         @Deprecated("Use isLoggable(String, int)", ReplaceWith("this.isLoggable(null, priority)"))
         protected open fun isLoggable(priority: Int) = true
@@ -241,7 +247,7 @@ class YLog private constructor() {
         override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
             if (message.length < MAX_LOG_LENGTH) {
                 if (priority == Log.ASSERT) {
-                    Log.wtf(tag, message)
+                    Log.println(priority, tag, message)
                 } else {
                     Log.println(priority, tag, message)
                 }
@@ -387,6 +393,10 @@ class YLog private constructor() {
             throw AssertionError() // Missing override for log method.
         }
 
+        override fun json(message: String?) {
+            treeArray.forEach { it.json(message) }
+        }
+
         /**
          * A view into Timber's planted trees as a tree itself. This can be used for injecting a logger
          * instance rather than using static methods or to facilitate testing.
@@ -465,22 +475,60 @@ class YLog private constructor() {
 
     class DefaultTree : DebugTree() {
 
+        companion object {
+
+            val LINE_SEPARATOR = System.getProperty("line.separator")
+            val JSON_INDENT = 4
+
+            val JSON = 10
+        }
+
         override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-//            var tag = tag
-//            if (tag != null) {
-//                val threadName = Thread.currentThread().name
-//                tag = "<$threadName> $tag"
-//            }
+            if (priority == JSON) {
+                printJson(tag, message)
+                return
+            }
             super.log(priority, tag, message, t)
         }
 
+        private fun printJson(tag: String?, msg: String) {
+            val message = try {
+                when {
+                    msg.startsWith("{") -> {
+                        val jsonObject = JSONObject(msg)
+                        jsonObject.toString(JSON_INDENT)
+                    }
+                    msg.startsWith("[") -> {
+                        val jsonArray = JSONArray(msg)
+                        jsonArray.toString(JSON_INDENT)
+                    }
+                    else -> msg
+                }
+            } catch (e: JSONException) {
+                msg
+            }
+            printLine(tag, true)
+//            message = headString + LINE_SEPARATOR + message
+            val lines = message.split(LINE_SEPARATOR.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            for (line in lines) {
+                Log.d(tag, "║ $line")
+            }
+            printLine(tag, false)
+        }
+
+        private fun printLine(tag: String?, isTop: Boolean) {
+            if (isTop) {
+                Log.d(tag, "╔═══════════════════════════════════════════════════════════════════════════════════════")
+            } else {
+                Log.d(tag, "╚═══════════════════════════════════════════════════════════════════════════════════════")
+            }
+        }
+
         override fun createStackElementTag(element: StackTraceElement): String? {
-//            "(" + className + ":" + lineNumber + ") "
-//            return super.createStackElementTag(element) + "(Line ${element.lineNumber})"
-            val name = super.createStackElementTag(element) + ".kt"
-            return "($name:${element.lineNumber})"
+            return "(${super.createStackElementTag(element)}.kt:${element.lineNumber})"
         }
 
     }
+
 
 }
